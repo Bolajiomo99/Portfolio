@@ -748,6 +748,40 @@ img {
   animation-delay: 2s;
 }
 
+.badge-4 {
+  top: 6%;
+  left: -6%;
+  animation-delay: 1.5s;
+}
+
+.badge-5 {
+  bottom: 2%;
+  left: 2%;
+  animation-delay: 2.5s;
+}
+
+/* Zindi and TED have no Font Awesome glyph, so they use a wordmark that is
+   guaranteed to render rather than an icon that silently falls back to a box. */
+.social-mark {
+  font-family: var(--font-code);
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.social-mark-ted {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+/* The badges are links now — keep them looking like cards, not text. */
+a.floating-badge {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @keyframes floatBadge {
   0%,
   100% {
