@@ -8,3 +8,7 @@ Thumbs.db
 
 # Local config & secrets
 .env
+
+# Full-resolution screenshot originals. The optimised .jpg versions are what
+# the site serves; these stay local in case they need re-cropping.
+images/*.png
