@@ -1229,28 +1229,6 @@ img {
   font-size: 0.8rem;
 }
 
-/* Live landing-page thumbnails. The iframe renders at 4x the card width so
-   it gets a desktop-sized viewport, then scales down to fit exactly. */
-.project-preview {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 400%;
-  height: 400%;
-  border: 0;
-  transform: scale(0.25);
-  transform-origin: 0 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* The pen is already a single centred composition, so it needs less scaling. */
-.project-preview-pen {
-  width: 200%;
-  height: 200%;
-  transform: scale(0.5);
-}
-
 /* Landing-page screenshots. Drop a PNG into images/ and it replaces the icon;
    if the file is missing the img removes itself and the icon shows through. */
 .project-shot {

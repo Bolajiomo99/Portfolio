@@ -1,0 +1,666 @@
+/* CSS-Only Cube Pack — compiled from the pen's SCSS.
+   Everything is scoped to .cube-scene so the portfolio's own styles are
+   untouched, and vmin is replaced by --cube so it sizes to its container
+   instead of the viewport. */
+
+.cube-scene {
+  --cube: 26px;
+  --gap: 2px;
+  --ease: cubic-bezier(.5, 0, 0, 1);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  background: linear-gradient(to bottom right, #a4c5c7, #2D3F48);
+  z-index: 1;
+}
+
+.cube-scene *,
+.cube-scene *::before,
+.cube-scene *::after {
+  box-sizing: border-box;
+  position: relative;
+  animation-timing-function: var(--ease) !important;
+}
+
+/* Pause while off-screen — 27 animated cubes are not cheap. */
+.cube-scene.is-paused *,
+.cube-scene.is-paused *::before,
+.cube-scene.is-paused *::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube-scene *,
+  .cube-scene *::before,
+  .cube-scene *::after {
+    animation-play-state: paused !important;
+  }
+}
+
+.cube-scene .cubes {
+  width: var(--cube);
+  height: var(--cube);
+  transform: rotateX(60deg) rotateZ(-45deg);
+  backface-visibility: visible;
+  overflow: visible;
+  transform-style: preserve-3d;
+  perspective: 9000px;
+}
+
+.cube-scene .cube,
+.cube-scene .large-shadow {
+  height: var(--cube);
+  width: var(--cube);
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  transform-origin: center center calc(var(--cube) * -0.05);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cube-scene .cube > .cube-wrap {
+  animation: cube-spin 4s infinite both;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  transform-origin: center center calc(var(--cube) * -0.05);
+  will-change: transform;
+}
+
+@keyframes cube-spin {
+  from, to, 20%, 60% { animation-timing-function: step-start; transform: none; }
+  40% { transform: rotateY(-1turn); }
+}
+
+.cube-scene .cube[data-cube^="1"],
+.cube-scene .large-shadow[data-cube^="1"] {
+  top: calc(-1 * var(--cube) - var(--gap));
+  --color-bg-top: #A0EBE8;
+  --color-bg-bottom: #89E4E4;
+  --color-fl-top: #4EAFBC;
+  --color-fl-bottom: #43A5B2;
+}
+
+.cube-scene .cube[data-cube^="2"],
+.cube-scene .large-shadow[data-cube^="2"] {
+  --color-bg-top: #89E4E4;
+  --color-bg-bottom: #76DEE5;
+  --color-fl-top: #43A5B2;
+  --color-fl-bottom: #3D93A9;
+}
+
+.cube-scene .cube[data-cube^="3"],
+.cube-scene .large-shadow[data-cube^="3"] {
+  top: calc(var(--cube) + var(--gap));
+  --color-bg-top: #76DEE5;
+  --color-bg-bottom: #63D3D4;
+  --color-fl-top: #3D93A9;
+  --color-fl-bottom: #3B8D9F;
+}
+
+.cube-scene .cube[data-cube^="11"],
+.cube-scene .large-shadow[data-cube^="11"],
+.cube-scene .cube[data-cube^="21"],
+.cube-scene .large-shadow[data-cube^="21"],
+.cube-scene .cube[data-cube^="31"],
+.cube-scene .large-shadow[data-cube^="31"] {
+  left: calc(-1 * var(--cube) - var(--gap));
+  --color-fr-top: #2D505F;
+  --color-fr-bottom: #2D4F63;
+}
+
+.cube-scene .cube[data-cube^="12"],
+.cube-scene .large-shadow[data-cube^="12"],
+.cube-scene .cube[data-cube^="22"],
+.cube-scene .large-shadow[data-cube^="22"],
+.cube-scene .cube[data-cube^="32"],
+.cube-scene .large-shadow[data-cube^="32"] {
+  --color-fr-top: #2D4F63;
+  --color-fr-bottom: #2A5262;
+}
+
+.cube-scene .cube[data-cube^="13"],
+.cube-scene .large-shadow[data-cube^="13"],
+.cube-scene .cube[data-cube^="23"],
+.cube-scene .large-shadow[data-cube^="23"],
+.cube-scene .cube[data-cube^="33"],
+.cube-scene .large-shadow[data-cube^="33"] {
+  left: calc(var(--cube) + var(--gap));
+  --color-fr-top: #2A5262;
+  --color-fr-bottom: #2A5467;
+}
+
+.cube-scene .cube[data-cube$="2"],
+.cube-scene .large-shadow[data-cube$="2"] { transform: translateZ(calc(var(--cube) + var(--gap))); }
+
+.cube-scene .cube[data-cube$="3"],
+.cube-scene .large-shadow[data-cube$="3"] { transform: translateZ(calc(-1 * var(--cube) - var(--gap))); }
+
+.cube-scene .large-shadows { transform: translateZ(calc(var(--cube) * -2.1)); }
+
+.cube-scene .large-shadow {
+  background: black;
+  transform-origin: top right;
+  animation: large-shadow 4s infinite both;
+  filter: var(--shadow-filter, blur(calc(var(--cube) * 0.3)));
+  opacity: 0.2;
+  will-change: transform;
+}
+
+@keyframes large-shadow {
+  from, 80%, to { transform: scale(1.5, 3); }
+  20% { transform: scale(1.5, 2); }
+  40%, 60% { transform: scale(1.5, 5); }
+  50% { transform: scale(1, 5); }
+}
+
+/* ---- faces ---- */
+.cube-scene [class^="cube-"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: visible;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  animation: none 4s infinite both;
+}
+
+.cube-scene [class^="cube-"]::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  will-change: transform;
+  animation: none 4s infinite both;
+}
+
+.cube-scene .cube-top {
+  animation-name: cube-top;
+  overflow: hidden;
+}
+
+.cube-scene .cube-top::before {
+  background-image:
+    linear-gradient(to bottom, #CBFEFF, transparent),
+    linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+  background-size: 2px 100%, auto;
+  background-repeat: no-repeat;
+}
+
+.cube-scene .cube-top::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #DFF4F0;
+  animation: cube-top-flash 4s infinite both;
+}
+
+@keyframes cube-top-flash {
+  from, 50%, 60%, to { opacity: 0; }
+  52% { opacity: 0.9; }
+}
+
+@keyframes cube-top {
+  20% { transform: translateZ(calc(var(--cube) * -0.8)); }
+  40%, 60%, 80% { transform: none; }
+}
+
+.cube-scene .cube-front-left {
+  transform-origin: left center;
+  transform: rotateY(90deg);
+  overflow: hidden;
+}
+
+.cube-scene .cube-front-left::before {
+  background-image:
+    linear-gradient(to bottom, var(--color-fl-top), var(--color-fl-bottom)),
+    linear-gradient(to bottom, rgba(255,255,255,.5), transparent 60%);
+  background-repeat: no-repeat;
+  transform-origin: right;
+  animation-name: cube-front-left;
+}
+
+@keyframes cube-front-left {
+  20% { transform: scaleX(.2); }
+  40%, 60% { transform: translateX(calc(var(--cube) * -0.8)) scaleX(.2); }
+  80% { transform: none; }
+}
+
+.cube-scene .cube-front-right {
+  transform-origin: bottom center;
+  transform: rotateX(90deg);
+}
+
+.cube-scene .cube-front-right::before {
+  background-image: linear-gradient(to right, var(--color-fr-top), var(--color-fr-bottom));
+  transform-origin: top;
+  animation-name: cube-front-right;
+}
+
+@keyframes cube-front-right {
+  20% { transform: scaleY(.2); }
+  40%, 60% { transform: translateY(calc(var(--cube) * 0.8)) scaleY(.2); }
+  80% { transform: none; }
+}
+
+.cube-scene .cube-bottom {
+  transform: translateZ(calc(var(--cube) * -1));
+  background-image: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+  animation-name: cube-bottom;
+}
+
+@keyframes cube-bottom {
+  from, 20%, 80%, to { transform: translateZ(calc(calc(var(--cube) * -1) + 1px)) scale(.95); }
+  40%, 60% { transform: translateZ(calc(var(--cube) * -0.2)) scale(.95); }
+}
+
+.cube-scene .cube-bottom::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #DFF4F0;
+  animation: cube-bottom-flash 4s infinite both;
+  will-change: transform;
+}
+
+@keyframes cube-bottom-flash {
+  from, 40%, 50%, to { opacity: 0; }
+  45% { opacity: 0.9; }
+}
+
+/* ---- shadows ---- */
+.cube-scene [class^="shadow"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  filter: var(--shadow-filter, blur(20px));
+  will-change: transform;
+}
+
+.cube-scene [class^="shadow"]::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #214354;
+  opacity: 0.7;
+  will-change: transform;
+}
+
+.cube-scene .shadow-y { animation: shadow-y 4s infinite both; }
+.cube-scene .shadow-y[data-cube^="11"],
+.cube-scene .shadow-y[data-cube^="21"] { left: 10%; }
+.cube-scene .shadow-y[data-cube^="13"],
+.cube-scene .shadow-y[data-cube^="23"] { left: -10%; }
+
+@keyframes shadow-y {
+  to, 40%, 60%, 80%, from { transform: translateY(-100%) scale(2, .75); }
+  20% { transform: scale(2, 1); }
+}
+
+.cube-scene .shadow-y::before {
+  animation: shadow-y-inverse 4s infinite both;
+  transform-origin: top center;
+}
+
+@keyframes shadow-y-inverse {
+  to, 40%, 60%, 80%, from { opacity: 0.9; transform: scale(2, 1); }
+  20% { opacity: 0; transform: translateY(-100%) scale(2, .75); }
+}
+
+.cube-scene .shadow-flip {
+  width: calc(var(--cube) * 0.2);
+  height: 50%;
+  top: calc(var(--cube) * -0.1);
+  left: calc(50% - calc(var(--cube) * 0.1));
+  transform-origin: top center;
+  filter: var(--shadow-filter, blur(calc(var(--cube) * 0.1)));
+  animation: shadow-flip 4s infinite both;
+  overflow: visible;
+}
+
+@keyframes shadow-flip {
+  from, 20%, 40%, 50%, to { transform: rotate(90deg); }
+  45% { transform: rotate(270deg); }
+}
+
+.cube-scene .shadow-flip::before {
+  animation: shadow-flip-inverse 4s infinite both;
+  transform-origin: top center;
+  opacity: 0;
+}
+
+@keyframes shadow-flip-inverse {
+  from, 20%, 40%, 50%, to { transform: rotate(0deg); opacity: 0; }
+  45% { transform: rotate(-180deg); opacity: 0.6; }
+}
+
+.cube-scene .shadow-z {
+  animation: shadow-z 4s infinite both;
+  overflow: visible;
+  transform-origin: top center;
+}
+
+.cube-scene .shadow-z[data-cube^="11"] { --shadow-z-left: 50%; --shadow-z-top: 50%; }
+.cube-scene .shadow-z[data-cube^="21"],
+.cube-scene .shadow-z[data-cube^="31"] { --shadow-z-left: 50%; --shadow-z-top: 0; }
+.cube-scene .shadow-z[data-cube^="32"] { --shadow-z-left: 0; --shadow-z-top: 0; --shadow-x-scale: 2; }
+.cube-scene .shadow-z[data-cube^="33"] { --shadow-z-left: -50%; --shadow-z-top: 0; }
+
+@keyframes shadow-z {
+  from, 40%, 60%, 80%, to { transform: scale(var(--shadow-x-scale, 1), 2); }
+  20% { transform: translateX(var(--shadow-z-left, 0)) translateY(var(--shadow-z-top, 0)) scale(calc(var(--shadow-x-scale, 1) / 2), 2); }
+}
+
+.cube-scene .shadow-z::before { animation: shadow-z-inverse 4s infinite both; }
+
+@keyframes shadow-z-inverse {
+  from { opacity: .5; transform: scale(2); }
+  20% { transform: scale(2); }
+  40% { opacity: .5; transform: translateX(var(--shadow-z-left, 0)) translateY(var(--shadow-z-top, 0)) scale(var(--shadow-x-scale, 1), 2); }
+  45% { opacity: 0; }
+  55% { opacity: .5; }
+  60% { transform: translateX(var(--shadow-z-left, 0)) translateY(var(--shadow-z-top, 0)) scale(var(--shadow-x-scale, 1), 2); }
+  80% { transform: scale(2); }
+  to { opacity: 1; transform: scale(2); }
+}
+
+/* ---- per-cube stagger (compiled from the SCSS @each) ---- */
+.cube-scene .cube[data-cube="111"] > .cube-wrap,
+.cube-scene .cube[data-cube="111"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="111"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="111"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="111"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="111"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="111"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="111"]::before,
+.cube-scene .large-shadow[data-cube="111"] { animation-delay: 166ms; }
+
+.cube-scene .cube[data-cube="112"] > .cube-wrap,
+.cube-scene .cube[data-cube="112"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="112"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="112"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="112"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="112"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="112"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="112"]::before,
+.cube-scene .large-shadow[data-cube="112"] { animation-delay: 78ms; }
+
+.cube-scene .cube[data-cube="113"] > .cube-wrap,
+.cube-scene .cube[data-cube="113"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="113"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="113"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="113"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="113"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="113"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="113"]::before,
+.cube-scene .large-shadow[data-cube="113"] { animation-delay: 203ms; }
+
+.cube-scene .cube[data-cube="121"] > .cube-wrap,
+.cube-scene .cube[data-cube="121"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="121"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="121"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="121"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="121"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="121"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="121"]::before,
+.cube-scene .large-shadow[data-cube="121"] { animation-delay: 25ms; }
+
+.cube-scene .cube[data-cube="122"] > .cube-wrap,
+.cube-scene .cube[data-cube="122"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="122"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="122"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="122"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="122"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="122"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="122"]::before,
+.cube-scene .large-shadow[data-cube="122"] { animation-delay: 38ms; }
+
+.cube-scene .cube[data-cube="123"] > .cube-wrap,
+.cube-scene .cube[data-cube="123"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="123"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="123"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="123"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="123"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="123"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="123"]::before,
+.cube-scene .large-shadow[data-cube="123"] { animation-delay: 275ms; }
+
+.cube-scene .cube[data-cube="131"] > .cube-wrap,
+.cube-scene .cube[data-cube="131"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="131"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="131"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="131"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="131"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="131"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="131"]::before,
+.cube-scene .large-shadow[data-cube="131"] { animation-delay: 49ms; }
+
+.cube-scene .cube[data-cube="132"] > .cube-wrap,
+.cube-scene .cube[data-cube="132"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="132"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="132"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="132"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="132"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="132"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="132"]::before,
+.cube-scene .large-shadow[data-cube="132"] { animation-delay: 188ms; }
+
+.cube-scene .cube[data-cube="133"] > .cube-wrap,
+.cube-scene .cube[data-cube="133"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="133"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="133"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="133"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="133"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="133"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="133"]::before,
+.cube-scene .large-shadow[data-cube="133"] { animation-delay: 299ms; }
+
+.cube-scene .cube[data-cube="211"] > .cube-wrap,
+.cube-scene .cube[data-cube="211"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="211"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="211"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="211"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="211"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="211"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="211"]::before,
+.cube-scene .large-shadow[data-cube="211"] { animation-delay: 30ms; }
+
+.cube-scene .cube[data-cube="212"] > .cube-wrap,
+.cube-scene .cube[data-cube="212"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="212"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="212"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="212"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="212"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="212"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="212"]::before,
+.cube-scene .large-shadow[data-cube="212"] { animation-delay: 260ms; }
+
+.cube-scene .cube[data-cube="213"] > .cube-wrap,
+.cube-scene .cube[data-cube="213"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="213"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="213"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="213"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="213"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="213"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="213"]::before,
+.cube-scene .large-shadow[data-cube="213"] { animation-delay: 110ms; }
+
+.cube-scene .cube[data-cube="221"] > .cube-wrap,
+.cube-scene .cube[data-cube="221"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="221"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="221"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="221"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="221"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="221"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="221"]::before,
+.cube-scene .large-shadow[data-cube="221"] { animation-delay: 20ms; }
+
+.cube-scene .cube[data-cube="222"] > .cube-wrap,
+.cube-scene .cube[data-cube="222"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="222"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="222"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="222"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="222"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="222"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="222"]::before,
+.cube-scene .large-shadow[data-cube="222"] { animation-delay: 45ms; }
+
+.cube-scene .cube[data-cube="223"] > .cube-wrap,
+.cube-scene .cube[data-cube="223"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="223"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="223"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="223"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="223"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="223"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="223"]::before,
+.cube-scene .large-shadow[data-cube="223"] { animation-delay: 223ms; }
+
+.cube-scene .cube[data-cube="231"] > .cube-wrap,
+.cube-scene .cube[data-cube="231"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="231"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="231"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="231"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="231"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="231"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="231"]::before,
+.cube-scene .large-shadow[data-cube="231"] { animation-delay: 215ms; }
+
+.cube-scene .cube[data-cube="232"] > .cube-wrap,
+.cube-scene .cube[data-cube="232"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="232"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="232"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="232"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="232"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="232"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="232"]::before,
+.cube-scene .large-shadow[data-cube="232"] { animation-delay: 36ms; }
+
+.cube-scene .cube[data-cube="233"] > .cube-wrap,
+.cube-scene .cube[data-cube="233"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="233"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="233"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="233"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="233"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="233"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="233"]::before,
+.cube-scene .large-shadow[data-cube="233"] { animation-delay: 124ms; }
+
+.cube-scene .cube[data-cube="311"] > .cube-wrap,
+.cube-scene .cube[data-cube="311"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="311"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="311"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="311"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="311"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="311"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="311"]::before,
+.cube-scene .large-shadow[data-cube="311"] { animation-delay: 47ms; }
+
+.cube-scene .cube[data-cube="312"] > .cube-wrap,
+.cube-scene .cube[data-cube="312"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="312"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="312"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="312"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="312"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="312"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="312"]::before,
+.cube-scene .large-shadow[data-cube="312"] { animation-delay: 283ms; }
+
+.cube-scene .cube[data-cube="313"] > .cube-wrap,
+.cube-scene .cube[data-cube="313"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="313"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="313"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="313"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="313"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="313"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="313"]::before,
+.cube-scene .large-shadow[data-cube="313"] { animation-delay: 218ms; }
+
+.cube-scene .cube[data-cube="321"] > .cube-wrap,
+.cube-scene .cube[data-cube="321"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="321"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="321"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="321"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="321"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="321"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="321"]::before,
+.cube-scene .large-shadow[data-cube="321"] { animation-delay: 31ms; }
+
+.cube-scene .cube[data-cube="322"] > .cube-wrap,
+.cube-scene .cube[data-cube="322"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="322"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="322"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="322"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="322"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="322"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="322"]::before,
+.cube-scene .large-shadow[data-cube="322"] { animation-delay: 290ms; }
+
+.cube-scene .cube[data-cube="323"] > .cube-wrap,
+.cube-scene .cube[data-cube="323"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="323"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="323"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="323"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="323"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="323"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="323"]::before,
+.cube-scene .large-shadow[data-cube="323"] { animation-delay: 64ms; }
+
+.cube-scene .cube[data-cube="331"] > .cube-wrap,
+.cube-scene .cube[data-cube="331"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="331"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="331"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="331"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="331"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="331"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="331"]::before,
+.cube-scene .large-shadow[data-cube="331"] { animation-delay: 115ms; }
+
+.cube-scene .cube[data-cube="332"] > .cube-wrap,
+.cube-scene .cube[data-cube="332"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="332"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="332"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="332"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="332"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="332"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="332"]::before,
+.cube-scene .large-shadow[data-cube="332"] { animation-delay: 299ms; }
+
+.cube-scene .cube[data-cube="333"] > .cube-wrap,
+.cube-scene .cube[data-cube="333"] > .cube-wrap::before,
+.cube-scene .cube[data-cube="333"] > .cube-wrap::after,
+.cube-scene .cube[data-cube="333"] > .cube-wrap > [class^="cube-"],
+.cube-scene .cube[data-cube="333"] > .cube-wrap > [class^="cube-"]::before,
+.cube-scene .cube[data-cube="333"] > .cube-wrap > [class^="cube-"]::after,
+.cube-scene .cube[data-cube="333"] > .cube-wrap [class^="shadow-"],
+.cube-scene [class^="shadow-"][data-cube="333"]::before,
+.cube-scene .large-shadow[data-cube="333"] { animation-delay: 32ms; }

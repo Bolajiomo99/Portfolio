@@ -556,3 +556,23 @@ window.Animations = {
   initParallax,
   initSmoothScroll
 };
+
+// The cube pack runs 27 cubes with blurred shadows, so let it idle whenever
+// it is scrolled out of view rather than burning cycles the whole visit.
+document.addEventListener("DOMContentLoaded", () => {
+  const scene = document.getElementById("cubeScene");
+  if (!scene) return;
+
+  if (!("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        scene.classList.toggle("is-paused", !entry.isIntersecting);
+      });
+    },
+    { rootMargin: "100px" }
+  );
+
+  observer.observe(scene);
+});
