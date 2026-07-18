@@ -1187,6 +1187,48 @@ img {
   border: 1px solid var(--border);
 }
 
+.about-motto {
+  color: var(--primary);
+  font-family: var(--font-code);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  border-inline-start: 3px solid var(--primary);
+  padding-inline-start: 1rem;
+  margin: var(--spacing-sm) 0;
+}
+
+.credential-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.credential-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-inline-start: 2px solid var(--border);
+  padding-inline-start: 0.875rem;
+  transition: border-color var(--transition);
+}
+
+.credential-item:hover {
+  border-inline-start-color: var(--primary);
+}
+
+.credential-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.credential-meta {
+  color: var(--text-muted);
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+}
+
 .projects-note {
   color: var(--text-secondary);
   font-size: 0.95rem;
@@ -1559,6 +1601,24 @@ img {
 
 [dir="rtl"] .contact-item:hover {
   transform: translateX(-10px);
+}
+
+/* Seven nav links no longer fit at full spacing before the mobile menu
+   takes over at 768px, so tighten them through the middle widths. */
+@media (max-width: 1250px) {
+  .nav-menu {
+    gap: 1rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .nav-link i {
+    display: none;
+  }
 }
 
 @media (max-width: 1024px) {
