@@ -829,6 +829,13 @@ a.floating-badge {
   gap: 0.5rem;
   color: var(--text-secondary);
   font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.scroll-indicator:hover {
+  color: var(--primary);
 }
 
 .scroll-mouse {
@@ -846,16 +853,20 @@ a.floating-badge {
   height: 10px;
   background: var(--primary);
   border-radius: 2px;
-  animation: scrollWheel 2s infinite;
+  animation: scrollWheelUp 2s infinite;
 }
 
-@keyframes scrollWheel {
+@keyframes scrollWheelUp {
   0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  50% {
     transform: translateY(0);
     opacity: 1;
   }
   100% {
-    transform: translateY(20px);
+    transform: translateY(-8px);
     opacity: 0;
   }
 }
